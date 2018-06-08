@@ -1,10 +1,15 @@
 package utils;
 
+import android.gesture.Gesture;
+import android.gesture.GestureUtils;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dev.jhonyrg.todoapp.R;
@@ -15,14 +20,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private List<ToDo> toDo;
+    private List<ToDo> toDoList;
     private int idLayout;
     private OnItemClickListener itemClickListener;
+    private OnItemLogClickListener itemLongListener;
 
-    public RecyclerViewAdapter(List<ToDo> toDo, int idLayout, OnItemClickListener itemClickListener) {
-        this.toDo = toDo;
+    public RecyclerViewAdapter(List<ToDo> toDo, int idLayout, OnItemClickListener itemClickListener, OnItemLogClickListener itemLongListener) {
+        this.toDoList = toDo;
         this.idLayout = idLayout;
         this.itemClickListener = itemClickListener;
+        this.itemLongListener = itemLongListener;
     }
 
     @NonNull
@@ -37,32 +44,43 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(this.toDo.get(position), itemClickListener);
+        holder.itemView.setLongClickable(true);
+        holder.bind(this.toDoList.get(position), itemClickListener, itemLongListener);
     }
 
     @Override
     public int getItemCount() {
-        return this.toDo.size();
+        return this.toDoList.size();
     }
 
+    //Listeners Interfaces
     public interface OnItemClickListener
     {
         void onItemClick(ToDo itemToDo, int position);
     }
 
+    public interface OnItemLogClickListener
+    {
+        void onItemLongClick(ToDo itemToDo, int position);
+    }
+
+    //View Holder Class
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        @BindView(R.id.txtvTitle) public TextView titulo;
-        @BindView(R.id.txtvDescription) public TextView descripcion;
-        @BindView(R.id.txtvDate) public TextView fecha;
+        @BindView(R.id.txtvId)  TextView id;
+        @BindView(R.id.txtvTitle)  TextView titulo;
+        @BindView(R.id.txtvDescription)  TextView descripcion;
+        @BindView(R.id.txtvDate)  TextView fecha;
+        @BindView(R.id.ibtnDelete) ImageButton delete;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void bind(final ToDo itemToDo, final OnItemClickListener listener)
+        public void bind(final ToDo itemToDo, final OnItemClickListener listener, final OnItemLogClickListener longListener)
         {
+            this.id.setText(String.valueOf(itemToDo._id.toString()));
             this.titulo.setText(itemToDo.titulo);
             this.descripcion.setText(itemToDo.descripcion);
             this.fecha.setText(itemToDo.fecha);
@@ -70,9 +88,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    deleteIconVisible(true);
                     listener.onItemClick(itemToDo, getAdapterPosition());
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    deleteIconVisible(false);
+
+                    longListener.onItemLongClick(itemToDo, getAdapterPosition());
+                    return true;
+                }
+            });
+        }
+
+        public void deleteIconVisible(Boolean click)
+        {
+            if(!click)
+            {
+                if(delete.getVisibility() == View.GONE)
+                {
+                    delete.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    delete.setVisibility(View.GONE);
+                }
+            }
+            else
+            {
+                delete.setVisibility(View.GONE);
+            }
+
         }
     }
 }
