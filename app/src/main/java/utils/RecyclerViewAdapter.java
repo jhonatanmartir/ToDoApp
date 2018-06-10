@@ -1,12 +1,9 @@
 package utils;
 
-import android.gesture.Gesture;
-import android.gesture.GestureUtils;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -56,12 +53,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     //Listeners Interfaces
     public interface OnItemClickListener
     {
-        void onItemClick(ToDo itemToDo, int position);
+        void onItemClick(ToDo itemToDo, int position, ImageButton button);
     }
 
     public interface OnItemLogClickListener
     {
-        void onItemLongClick(ToDo itemToDo, int position);
+        void onItemLongClick(ToDo itemToDo, int position, ImageButton button);
     }
 
     //View Holder Class
@@ -88,40 +85,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteIconVisible(true);
-                    listener.onItemClick(itemToDo, getAdapterPosition());
+                    listener.onItemClick(itemToDo, getAdapterPosition(), delete);
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    deleteIconVisible(false);
-
-                    longListener.onItemLongClick(itemToDo, getAdapterPosition());
+                    longListener.onItemLongClick(itemToDo, getAdapterPosition(), delete);
                     return true;
                 }
             });
         }
-
-        public void deleteIconVisible(Boolean click)
-        {
-            if(!click)
-            {
-                if(delete.getVisibility() == View.GONE)
-                {
-                    delete.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    delete.setVisibility(View.GONE);
-                }
-            }
-            else
-            {
-                delete.setVisibility(View.GONE);
-            }
-
-        }
     }
 }
+/*MainActivity.db = dbHelper.getReadableDatabase();
+        cupboard().withDatabase(MainActivity.db).delete(itemToDo);
+        MainActivity.db.close();*/

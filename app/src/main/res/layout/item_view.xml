@@ -66,7 +66,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/cardview_shadow_start_color"
-            android:visibility="visible"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_delete" />
 
     </LinearLayout>

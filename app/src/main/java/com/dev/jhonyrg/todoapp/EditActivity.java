@@ -1,9 +1,11 @@
 package com.dev.jhonyrg.todoapp;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.SQLException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -36,6 +38,10 @@ public class EditActivity extends AppCompatActivity {
     @MinLength(value = 4, messageId = R.string.error, order = 2)
     @BindView(R.id.etxtDescription) public MaterialEditText description;
 
+    @NotEmpty(messageId = R.string.error, order = 1)
+    @MinLength(value = 4, messageId = R.string.error, order = 2)
+    @BindView(R.id.etxtDate) public MaterialEditText date;
+
     //SQLiteDatabase db;
     ToDoHelper dbHelper;
 
@@ -62,8 +68,24 @@ public class EditActivity extends AppCompatActivity {
 
             this.title.setText(toDo.titulo);
             this.description.setText(toDo.descripcion);
+            this.date.setText(toDo.fecha);
         }
 
+    }
+
+    @OnClick(R.id.ibtnDate)
+    public void clickPicker()
+    {
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                final int actualMonth = month +1;
+                String dayFormat = (dayOfMonth < 10)? 0 + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
+                String monthFormat = (actualMonth < 10)? 0 + String.valueOf(actualMonth):String.valueOf(actualMonth);
+                date.setText(String.valueOf(dayFormat +"-"+monthFormat +"-"+ year));
+            }
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     @OnClick(R.id.btnSave)
@@ -84,7 +106,6 @@ public class EditActivity extends AppCompatActivity {
                         this.finish();
                         break;
                 }
-
             }
             catch (SQLException ex)
             {
@@ -120,7 +141,8 @@ public class EditActivity extends AppCompatActivity {
         ToDo toDo = new ToDo();
         toDo.titulo = title.getText().toString();
         toDo.descripcion = description.getText().toString();
-        toDo.fecha = Calendar.getInstance().getTime().toString();
+        //toDo.fecha = Calendar.getInstance().getTime().toString();
+        toDo.fecha = date.getText().toString();
 
         cupboard().withDatabase(MainActivity.db).put(toDo);
         MainActivity.db.close();
@@ -133,13 +155,14 @@ public class EditActivity extends AppCompatActivity {
     private void Update()
     {
         MainActivity.db = dbHelper.getWritableDatabase();
-        ToDo item = new ToDo();
+        ToDo toDo = new ToDo();
 
-        item._id = Long.valueOf(this.registerId);
-        item.titulo = title.getText().toString();
-        item.descripcion = description.getText().toString();
+        toDo._id = Long.valueOf(this.registerId);
+        toDo.titulo = title.getText().toString();
+        toDo.descripcion = description.getText().toString();
+        toDo.fecha = date.getText().toString();
 
-        cupboard().withDatabase(MainActivity.db).put(item);
+        cupboard().withDatabase(MainActivity.db).put(toDo);
         MainActivity.db.close();
     }
 }
