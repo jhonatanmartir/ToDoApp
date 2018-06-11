@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ToDoApp</string>
+    <string name="tEdit">Edit ToDo</string>
     <string name="txtvTitle">Title</string>
     <string name="txtvDescription">Description</string>
     <string name="txtvDate">Date</string>
