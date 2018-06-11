@@ -1,4 +1,4 @@
-package utils;
+package com.dev.jhonyrg.todoapp.utils;
 
 public class ToDo {
     public Long _id;

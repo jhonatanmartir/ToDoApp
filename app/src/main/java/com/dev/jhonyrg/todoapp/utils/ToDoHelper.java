@@ -1,4 +1,4 @@
-package utils;
+package com.dev.jhonyrg.todoapp.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

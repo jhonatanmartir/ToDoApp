@@ -1,6 +1,6 @@
 package com.dev.jhonyrg.todoapp;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,17 +16,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import utils.RecyclerViewAdapter;
-import utils.ToDo;
-import utils.ToDoHelper;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+import com.dev.jhonyrg.todoapp.utils.DB;
+import com.dev.jhonyrg.todoapp.utils.RecyclerViewAdapter;
+import com.dev.jhonyrg.todoapp.utils.ToDo;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnItemClickListener, RecyclerViewAdapter.OnItemLogClickListener{
-    public static SQLiteDatabase db;
+    static final int TODO_REQUEST = 11;
     private RecyclerViewAdapter adapter;
     private List<ToDo> toDoList;
-    private ToDoHelper dbHelper;
 
     @BindView(R.id.rvToDo)
     RecyclerView rvToDo;
@@ -38,21 +36,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         ButterKnife.bind(this);
 
-        dbHelper = new ToDoHelper(this);
-        dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 2);
-
         this.toDoList = new ArrayList<>();
         this.adapter = new RecyclerViewAdapter(toDoList, R.layout.item_view, this, this);
 
         this.rvToDo.setLayoutManager(new LinearLayoutManager(this));
         this.rvToDo.setAdapter(this.adapter);
         this.rvToDo.setItemAnimator(new DefaultItemAnimator());
+
+        this.fillList();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.fillList();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == TODO_REQUEST)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                this.fillList();
+            }
+            else
+            {
+
+            }
+        }
     }
 
     @OnClick(R.id.fabAdd)
@@ -80,16 +88,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Delete" + itemToDo._id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                DB db = new DB(MainActivity.this);
+                db.cb().delete(itemToDo);
+                db.close();
+                fillList();
             }
         });
     }
 
     private void fillList() {
-        db = dbHelper.getReadableDatabase();
+        DB db = new DB(this);
 
         try {
-            List<ToDo> itr = cupboard().withDatabase(db).query(ToDo.class).list();
+            List<ToDo> itr = db.cb().query(ToDo.class).list();
             this.toDoList.clear();
 
             for (ToDo tempToDo : itr) {

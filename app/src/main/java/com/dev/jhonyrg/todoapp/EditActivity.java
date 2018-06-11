@@ -1,5 +1,6 @@
 package com.dev.jhonyrg.todoapp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.SQLException;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.dev.jhonyrg.todoapp.utils.DB;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Calendar;
@@ -19,16 +21,14 @@ import eu.inmite.android.lib.validations.form.FormValidator;
 import eu.inmite.android.lib.validations.form.annotations.MinLength;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
-import utils.ToDo;
-import utils.ToDoHelper;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+import com.dev.jhonyrg.todoapp.utils.ToDo;
 
 public class EditActivity extends AppCompatActivity {
     public static final int CREATE = 1;
     public static final int UPDATE = 2;
     public static final String REG_ID = "id";
     public static final String OPERATION = "operation";
+    static final int TODO_REQUEST = 11;
 
     @NotEmpty(messageId = R.string.error, order = 1)
     @MinLength(value = 3, messageId = R.string.error, order = 2)
@@ -42,11 +42,9 @@ public class EditActivity extends AppCompatActivity {
     @MinLength(value = 4, messageId = R.string.error, order = 2)
     @BindView(R.id.etxtDate) public MaterialEditText date;
 
-    //SQLiteDatabase db;
-    ToDoHelper dbHelper;
-
     int action;
     String registerId;
+    Boolean insert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +53,16 @@ public class EditActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        dbHelper = new ToDoHelper(this);
+        this.insert = false;
 
         this.action = getIntent().getIntExtra(OPERATION, 0);
         if(this.action == UPDATE)
         {
             this.registerId = getIntent().getStringExtra(REG_ID);
 
-            MainActivity.db = dbHelper.getReadableDatabase();
-            ToDo toDo = cupboard().withDatabase(MainActivity.db).get(ToDo.class, Long.valueOf(registerId));
-            MainActivity.db.close();
+            DB db = new DB(this);
+            ToDo toDo = db.cb().get(ToDo.class, Long.valueOf(registerId));
+            db.close();
 
             this.title.setText(toDo.titulo);
             this.description.setText(toDo.descripcion);
@@ -109,7 +107,7 @@ public class EditActivity extends AppCompatActivity {
             }
             catch (SQLException ex)
             {
-                MainActivity.db.close();
+
             }
         }
     }
@@ -117,14 +115,23 @@ public class EditActivity extends AppCompatActivity {
     @OnClick(R.id.btnCancel)
     public void clickCancel()
     {
-        finish();
+        if(insert)
+        {
+            finish();
+        }
+        else
+        {
+            Intent intent = getIntent();
+            setResult(Activity.RESULT_CANCELED, intent);
+            finish();
+        }
     }
 
     public static void newRegister(AppCompatActivity activity)
     {
         Intent intent = new Intent(activity, EditActivity.class);
         intent.putExtra(OPERATION, CREATE);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, TODO_REQUEST);
     }
 
     public static void editRegister(AppCompatActivity activity, String id)
@@ -132,29 +139,32 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = new Intent(activity, EditActivity.class);
         intent.putExtra(OPERATION, UPDATE);
         intent.putExtra(REG_ID, id);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, TODO_REQUEST);
     }
 
     private void Insert()
     {
-        MainActivity.db = dbHelper.getWritableDatabase();
         ToDo toDo = new ToDo();
         toDo.titulo = title.getText().toString();
         toDo.descripcion = description.getText().toString();
-        //toDo.fecha = Calendar.getInstance().getTime().toString();
         toDo.fecha = date.getText().toString();
 
-        cupboard().withDatabase(MainActivity.db).put(toDo);
-        MainActivity.db.close();
+        DB db = new DB(this);
+        db.cb().put(toDo);
+        db.close();
 
         Toast.makeText(EditActivity.this, "Inserción", Toast.LENGTH_SHORT).show();
         title.setText("");
         description.setText("");
+        date.setText("");
+
+        insert = true;
+        Intent intent = getIntent();
+        setResult(Activity.RESULT_OK, intent);
     }
 
     private void Update()
     {
-        MainActivity.db = dbHelper.getWritableDatabase();
         ToDo toDo = new ToDo();
 
         toDo._id = Long.valueOf(this.registerId);
@@ -162,7 +172,11 @@ public class EditActivity extends AppCompatActivity {
         toDo.descripcion = description.getText().toString();
         toDo.fecha = date.getText().toString();
 
-        cupboard().withDatabase(MainActivity.db).put(toDo);
-        MainActivity.db.close();
+        DB db = new DB(this);
+        db.cb().put(toDo);
+        db.close();
+
+        Intent intent = getIntent();
+        setResult(Activity.RESULT_OK, intent);
     }
 }
