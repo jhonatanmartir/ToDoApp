@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             {
                 this.fillList();
             }
-            else
-            {
-
-            }
         }
     }
 

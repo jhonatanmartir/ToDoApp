@@ -99,6 +99,3 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 }
-/*MainActivity.db = dbHelper.getReadableDatabase();
-        cupboard().withDatabase(MainActivity.db).delete(itemToDo);
-        MainActivity.db.close();*/
