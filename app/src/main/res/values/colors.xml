@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#d84315</color>
-    <color name="colorPrimaryDark">#bf360c</color>
-    <color name="colorAccent">#ff5722</color>
+    <color name="colorPrimary">#4051b3</color>
+    <color name="colorPrimaryDark">#323f9e</color>
+    <color name="colorAccent">#FE4180</color>
+
+    <color name="primaryColor">#fafafa</color>
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#c7c7c7</color>
+    <color name="secondaryColor">#0277bd</color>
+    <color name="secondaryLightColor">#58a5f0</color>
+    <color name="secondaryDarkColor">#004c8c</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="backgroundDoneColor">#e1f5fe</color>
+    <color name="backgroundDeleteDoneColor">#004c8c</color>
+    <color name="backgroundWaitColor">#ffffff</color>
+    <color name="backgroundDeleteWaitColor">#62757f</color>
+    <color name="backgroundCriticalColor">#ede7f6</color>
+    <color name="backgroundDeleteCriticalColor">#65499c</color>
 </resources>

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,9 +26,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     static final int TODO_REQUEST = 11;
     private RecyclerViewAdapter adapter;
     private List<ToDo> toDoList;
+    private DB db;
 
-    @BindView(R.id.rvToDo)
-    RecyclerView rvToDo;
+    @BindView(R.id.rvToDo) RecyclerView rvToDo;
+    LinearLayout layoutDelete;
+    ImageButton buttonDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         this.rvToDo.setLayoutManager(new LinearLayoutManager(this));
         this.rvToDo.setAdapter(this.adapter);
         this.rvToDo.setItemAnimator(new DefaultItemAnimator());
+        registerForContextMenu(this.rvToDo);
 
         this.fillList();
+    }
+
+    private void fillList() {
+        this.db = new DB(this);
+
+        try {
+            List<ToDo> itr = this.db.cb().query(ToDo.class).list();
+            this.toDoList.clear();
+
+            for (ToDo tempToDo : itr) {
+                this.toDoList.add(tempToDo);
+            }
+        } finally {
+            this.db.close();
+            this.adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -66,26 +86,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     @Override
-    public void onItemClick(ToDo itemToDo, int position, ImageButton button) {
-        if (button.getVisibility() == View.VISIBLE) {
-            button.setVisibility(View.GONE);
-        } else {
-            EditActivity.editRegister(MainActivity.this, String.valueOf(itemToDo._id));
+    public void onItemLongClick(final ToDo itemToDo, int position, View view) {
+        layoutDelete = view.findViewById(R.id.lytDelete);
+        buttonDelete = view.findViewById(R.id.ibtnDelete);
+        if(layoutDelete.getVisibility() == View.GONE)
+        {
+            layoutDelete.setVisibility(View.VISIBLE);
         }
-    }
+        else
+        {
+            layoutDelete.setVisibility(View.GONE);
+        }
 
-    @Override
-    public void onItemLongClick(final ToDo itemToDo, int position, ImageButton button) {
-        if (button.getVisibility() == View.GONE) {
-            button.setVisibility(View.VISIBLE);
-        } else {
-            button.setVisibility(View.GONE);
-        }
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                DB db = new DB(MainActivity.this);
+                db = new DB(MainActivity.this);
                 db.cb().delete(itemToDo);
                 db.close();
                 fillList();
@@ -93,19 +110,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         });
     }
 
-    private void fillList() {
-        DB db = new DB(this);
+    @Override
+    public void onItemClick(ToDo itemToDo, int position, View view) {
+        layoutDelete = view.findViewById(R.id.lytDelete);
+        buttonDelete = view.findViewById(R.id.ibtnDelete);
 
-        try {
-            List<ToDo> itr = db.cb().query(ToDo.class).list();
-            this.toDoList.clear();
-
-            for (ToDo tempToDo : itr) {
-                this.toDoList.add(tempToDo);
-            }
-        } finally {
-            db.close();
-            this.adapter.notifyDataSetChanged();
+        if(layoutDelete.getVisibility() == View.VISIBLE)
+        {
+            layoutDelete.setVisibility(View.GONE);
         }
+        else
+        {
+            EditActivity.editRegister(MainActivity.this, String.valueOf(itemToDo._id));
+        }
+
     }
 }

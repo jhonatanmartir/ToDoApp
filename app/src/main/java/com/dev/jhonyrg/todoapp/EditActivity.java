@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.dev.jhonyrg.todoapp.utils.DB;
@@ -29,6 +32,9 @@ public class EditActivity extends AppCompatActivity {
     public static final String REG_ID = "id";
     public static final String OPERATION = "operation";
     static final int TODO_REQUEST = 11;
+    public static final int WAIT = 0;
+    public static final int DONE = 1;
+    public static final int CRITICAL = 2;
 
     @NotEmpty(messageId = R.string.error, order = 1)
     @MinLength(value = 3, messageId = R.string.error, order = 2)
@@ -42,6 +48,12 @@ public class EditActivity extends AppCompatActivity {
     @MinLength(value = 4, messageId = R.string.error, order = 2)
     @BindView(R.id.etxtDate) public MaterialEditText date;
 
+    @BindView(R.id.rbWait) public RadioButton statusWait;
+    @BindView(R.id.rbDone) public RadioButton statusDone;
+    @BindView(R.id.rbCritical) public RadioButton statusCritical;
+    @BindView(R.id.rbgStatus) public RadioGroup statusGroup;
+
+    DB db;
     int action;
     String registerId;
     Boolean insert;
@@ -58,15 +70,31 @@ public class EditActivity extends AppCompatActivity {
         this.action = getIntent().getIntExtra(OPERATION, 0);
         if(this.action == UPDATE)
         {
+            this.statusGroup.setVisibility(View.VISIBLE);
             this.registerId = getIntent().getStringExtra(REG_ID);
 
-            DB db = new DB(this);
+            this.db = new DB(this);
             ToDo toDo = db.cb().get(ToDo.class, Long.valueOf(registerId));
-            db.close();
+            this.db.close();
 
             this.title.setText(toDo.titulo);
             this.description.setText(toDo.descripcion);
             this.date.setText(toDo.fecha);
+
+            switch (toDo.status)
+            {
+                case WAIT:
+                    this.statusWait.setChecked(true);
+                    break;
+
+                case DONE:
+                    this.statusDone.setChecked(true);
+                    break;
+
+                case CRITICAL:
+                    this.statusCritical.setChecked(true);
+                    break;
+            }
         }
 
     }
@@ -112,9 +140,9 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.btnCancel)
-    public void clickCancel()
-    {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
         if(insert)
         {
             finish();
@@ -148,10 +176,11 @@ public class EditActivity extends AppCompatActivity {
         toDo.titulo = title.getText().toString();
         toDo.descripcion = description.getText().toString();
         toDo.fecha = date.getText().toString();
+        toDo.status = WAIT;
 
-        DB db = new DB(this);
-        db.cb().put(toDo);
-        db.close();
+        this.db = new DB(this);
+        this.db.cb().put(toDo);
+        this.db.close();
 
         Toast.makeText(EditActivity.this, "Inserción", Toast.LENGTH_SHORT).show();
         title.setText("");
@@ -172,9 +201,22 @@ public class EditActivity extends AppCompatActivity {
         toDo.descripcion = description.getText().toString();
         toDo.fecha = date.getText().toString();
 
-        DB db = new DB(this);
-        db.cb().put(toDo);
-        db.close();
+        if(statusWait.isChecked())
+        {
+            toDo.status = WAIT;
+        }
+        else if(statusDone.isChecked())
+        {
+            toDo.status = DONE;
+        }
+        else if(statusCritical.isChecked())
+        {
+            toDo.status = CRITICAL;
+        }
+
+        this.db = new DB(this);
+        this.db.cb().put(toDo);
+        this.db.close();
 
         Intent intent = getIntent();
         setResult(Activity.RESULT_OK, intent);

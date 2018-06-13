@@ -6,5 +6,11 @@
     <string name="txtvDate">Date</string>
     <string name="btnSave">Save</string>
     <string name="btnCalcel">Cancel</string>
-    <string name="error">Error</string>
+    <string name="error">This field is necessary</string>
+    <string name="itmDelete">Delete</string>
+    <string name="itmDone">Set Done</string>
+    <string name="swStatus">Status ToDo</string>
+    <string name="rbWait">Wait</string>
+    <string name="rbDone">Done</string>
+    <string name="rbCritical">Critical</string>
 </resources>

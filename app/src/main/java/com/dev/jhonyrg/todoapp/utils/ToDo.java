@@ -5,4 +5,5 @@ public class ToDo {
     public String titulo;
     public String descripcion;
     public String fecha;
+    public int status;
 }

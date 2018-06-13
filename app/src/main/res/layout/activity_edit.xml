@@ -7,6 +7,7 @@
     android:layout_margin="16dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:background="@color/primaryLightColor"
     android:orientation="vertical"
     tools:context=".EditActivity">
 
@@ -16,7 +17,9 @@
         android:layout_height="wrap_content"
         android:hint="@string/txtvTitle"
         android:inputType="textPersonName"
+        android:lines="1"
         android:paddingBottom="8dp"
+        android:textSize="17sp"
         app:met_floatingLabel="highlight" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -26,6 +29,7 @@
         android:hint="@string/txtvDescription"
         android:inputType="textLongMessage"
         android:paddingBottom="8dp"
+        android:textSize="17sp"
         app:met_floatingLabel="highlight" />
 
     <!---->
@@ -47,18 +51,83 @@
             android:hint="@string/txtvDate"
             android:inputType="datetime"
             android:paddingBottom="8dp"
+            android:textSize="17sp"
             app:met_floatingLabel="highlight" />
 
         <ImageButton
             android:id="@+id/ibtnDate"
-            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
-            android:background="@color/colorAccent"
-            app:srcCompat="@drawable/ic_date_dark" />
+            android:background="@color/secondaryDarkColor"
+            app:srcCompat="@drawable/calendar_range" />
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/swDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:paddingBottom="8dp"
+        android:text="@string/swStatus"
+        android:textColor="@color/primaryDarkColor"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <RadioGroup
+        android:id="@+id/rbgStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:checkedButton="@+id/rbWait"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:textAlignment="textStart"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/swStatus"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/rbWait"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="start"
+            android:layoutDirection="rtl"
+            android:paddingBottom="8dp"
+            android:text="@string/rbWait"
+            android:textAlignment="textStart"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/rbDone"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="start"
+            android:layoutDirection="rtl"
+            android:paddingBottom="8dp"
+            android:text="@string/rbDone"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/rbCritical"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="start"
+            android:layoutDirection="rtl"
+            android:paddingBottom="8dp"
+            android:text="@string/rbCritical"
+            android:textSize="15sp" />
+    </RadioGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,20 +141,20 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
             android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@color/secondaryColor"
             android:text="@string/btnCalcel"
-            android:textColor="@color/cardview_light_background" />
+            android:textColor="@color/secondaryTextColor"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnSave"
-            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@color/secondaryDarkColor"
             android:text="@string/btnSave"
-            android:textColor="@color/cardview_light_background" />
+            android:textColor="@color/secondaryTextColor" />
     </LinearLayout>
 
 </LinearLayout>
