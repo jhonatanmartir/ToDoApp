@@ -25,7 +25,7 @@ import eu.inmite.android.lib.validations.form.FormValidator;
 import eu.inmite.android.lib.validations.form.annotations.MinLength;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
-import com.dev.jhonyrg.todoapp.utils.ToDo;
+import com.dev.jhonyrg.todoapp.items.ToDo;
 
 public class EditActivity extends AppCompatActivity {
     public static final int CREATE = 1;

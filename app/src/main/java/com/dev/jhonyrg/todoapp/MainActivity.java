@@ -20,7 +20,7 @@ import butterknife.OnClick;
 
 import com.dev.jhonyrg.todoapp.utils.DB;
 import com.dev.jhonyrg.todoapp.utils.RecyclerViewAdapter;
-import com.dev.jhonyrg.todoapp.utils.ToDo;
+import com.dev.jhonyrg.todoapp.items.ToDo;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnItemClickListener, RecyclerViewAdapter.OnItemLogClickListener{
     static final int TODO_REQUEST = 11;

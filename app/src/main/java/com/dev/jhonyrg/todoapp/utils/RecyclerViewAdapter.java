@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.jhonyrg.todoapp.R;
+import com.dev.jhonyrg.todoapp.items.ToDo;
 
 import java.util.List;
 
