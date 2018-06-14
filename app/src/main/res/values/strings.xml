@@ -10,7 +10,7 @@
     <string name="itmDelete">Delete</string>
     <string name="itmDone">Set Done</string>
     <string name="swStatus">Status ToDo</string>
-    <string name="rbWait">Wait</string>
+    <string name="rbWait">Currently</string>
     <string name="rbDone">Done</string>
     <string name="rbCritical">Critical</string>
 </resources>

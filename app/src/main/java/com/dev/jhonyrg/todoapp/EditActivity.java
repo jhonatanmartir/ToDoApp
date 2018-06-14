@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -35,6 +36,7 @@ public class EditActivity extends AppCompatActivity {
     public static final int WAIT = 0;
     public static final int DONE = 1;
     public static final int CRITICAL = 2;
+    public static final String TAG = "NPE";
 
     @NotEmpty(messageId = R.string.error, order = 1)
     @MinLength(value = 3, messageId = R.string.error, order = 2)
@@ -135,7 +137,7 @@ public class EditActivity extends AppCompatActivity {
             }
             catch (SQLException ex)
             {
-
+                Log.e(TAG, ex.getMessage());
             }
         }
     }
@@ -186,6 +188,7 @@ public class EditActivity extends AppCompatActivity {
         title.setText("");
         description.setText("");
         date.setText("");
+        title.requestFocus();
 
         insert = true;
         Intent intent = getIntent();

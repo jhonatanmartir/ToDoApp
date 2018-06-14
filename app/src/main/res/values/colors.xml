@@ -18,5 +18,5 @@
     <color name="backgroundWaitColor">#ffffff</color>
     <color name="backgroundDeleteWaitColor">#62757f</color>
     <color name="backgroundCriticalColor">#ede7f6</color>
-    <color name="backgroundDeleteCriticalColor">#65499c</color>
+    <color name="backgroundDeleteCriticalColor">#1a237e</color>
 </resources>

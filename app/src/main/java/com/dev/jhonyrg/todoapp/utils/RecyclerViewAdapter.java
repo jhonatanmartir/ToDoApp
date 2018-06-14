@@ -93,21 +93,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             {
                 case WAIT:
                     this.status.setImageResource(R.drawable.calendar_clock);
-                    this.cardView.setBackgroundColor(itemView.getResources().getColor(R.color.backgroundWaitColor));
+                    this.cardView.setCardBackgroundColor(itemView.getResources().getColor(R.color.backgroundWaitColor));
                     this.layout.setBackgroundResource(R.color.backgroundDeleteWaitColor);
                     this.delete.setBackgroundResource(R.color.backgroundDeleteWaitColor);
                     break;
 
                 case DONE:
                     this.status.setImageResource(R.drawable.calendar_check);
-                    this.cardView.setBackgroundColor(itemView.getResources().getColor(R.color.backgroundDoneColor));
+                    this.cardView.setCardBackgroundColor(itemView.getResources().getColor(R.color.backgroundDoneColor));
                     this.layout.setBackgroundResource(R.color.backgroundDeleteDoneColor);
                     this.delete.setBackgroundResource(R.color.backgroundDeleteDoneColor);
                     break;
 
                 case CRITICAL:
                     this.status.setImageResource(R.drawable.calendar_late);
-                    this.cardView.setBackgroundColor(itemView.getResources().getColor(R.color.backgroundCriticalColor));
+                    this.cardView.setCardBackgroundColor(itemView.getResources().getColor(R.color.backgroundCriticalColor));
                     this.layout.setBackgroundResource(R.color.backgroundDeleteCriticalColor);
                     this.delete.setBackgroundResource(R.color.backgroundDeleteCriticalColor);
                     break;
